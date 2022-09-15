@@ -28,6 +28,7 @@ log "SET CURE WAIT:"
 # Set general debt ceiling (if defined)
 wait=$(jq -r ".cure_wait | values" "$CONFIG_FILE")
 if [[ "$wait" != "" ]]; then
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CURE" "$(seth --to-bytes32 "$(seth --from-ascii "wait")")" "$wait")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CURE" "$(seth --to-bytes32 "$(seth --from-ascii "wait")")" "$wait")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CURE" "$(seth --to-bytes32 "$(seth --from-ascii "wait")")" "$wait"
 fi

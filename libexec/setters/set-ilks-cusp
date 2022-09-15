@@ -35,8 +35,9 @@ for token in $tokens; do
             cusp=$(echo "${cusp}*10^25" | bc -l)
             cusp=${cusp%.*}
 
-            calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "cusp")")" "$cusp")"
-            sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#             calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "cusp")")" "$cusp")"
+#             sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+            sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "cusp")")" "$cusp"
         fi
     done
 done

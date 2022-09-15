@@ -29,6 +29,7 @@ Hole=$(jq -r ".dog_hole | values" "$CONFIG_FILE")
 if [[ "$Hole" != "" && "$Hole" != "0" ]]; then
     Hole=$(echo "$Hole"*10^45 | bc)
     Hole=$(seth --to-uint256 "${Hole%.*}")
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$(seth --to-bytes32 "$(seth --from-ascii "Hole")")" "$Hole")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$(seth --to-bytes32 "$(seth --from-ascii "Hole")")" "$Hole")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$(seth --to-bytes32 "$(seth --from-ascii "Hole")")" "$Hole"
 fi

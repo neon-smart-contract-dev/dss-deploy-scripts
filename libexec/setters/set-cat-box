@@ -30,6 +30,7 @@ box=$(jq -r ".cat_box | values" "$CONFIG_FILE")
 if [[ "$box" != "" && "$box" != "0" ]]; then
     box=$(echo "$box"*10^45 | bc)
     box=$(seth --to-uint256 "${box%.*}")
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CAT" "$(seth --to-bytes32 "$(seth --from-ascii "box")")" "$box")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CAT" "$(seth --to-bytes32 "$(seth --from-ascii "box")")" "$box")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_CAT" "$(seth --to-bytes32 "$(seth --from-ascii "box")")" "$box"
 fi

@@ -30,6 +30,7 @@ lid=$(jq -r ".flap_lid | values" "$CONFIG_FILE")
 if [[ "$lid" != "" ]]; then
     lid=$(echo "$lid"*10^45 | bc)
     lid=$(seth --to-uint256 "${lid%.*}")
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLAP" "$(seth --to-bytes32 "$(seth --from-ascii "lid")")" "$lid")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLAP" "$(seth --to-bytes32 "$(seth --from-ascii "lid")")" "$lid")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLAP" "$(seth --to-bytes32 "$(seth --from-ascii "lid")")" "$lid"
 fi

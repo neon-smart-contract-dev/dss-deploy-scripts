@@ -33,8 +33,9 @@ for token in $tokens; do
             set -e
             local  name;  name=$1
             local value; value=$2
-            calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_CALC_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "${name}")")" "${value}")"
-            sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#             calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_CALC_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "${name}")")" "${value}")"
+#             sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+            sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_CALC_${token}_${ilk}")" "$(seth --to-bytes32 "$(seth --from-ascii "${name}")")" "${value}"
         }
 
         flipDeploy="$(jq ".tokens.${token}.ilks.${ilk} | .flipDeploy!=null" "$CONFIG_FILE")"

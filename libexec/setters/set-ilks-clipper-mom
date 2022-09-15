@@ -31,8 +31,9 @@ for token in $tokens; do
     for ilk in $ilks; do
         flipDeploy="$(jq ".tokens.${token}.ilks.${ilk} | .flipDeploy!=null" "$CONFIG_FILE")"
         if [[ "$flipDeploy" == false ]]; then
-            calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$CLIPPER_MOM")"
-            sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#             calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$CLIPPER_MOM")"
+#             sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+            sethSend "$PROXY_PAUSE_ACTIONS" 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$(eval echo "\$MCD_CLIP_${token}_${ilk}")" "$CLIPPER_MOM"
             cm_tolerance=$(jq -r ".tokens.${token}.ilks.${ilk} | .clipDeploy.cm_tolerance" "$CONFIG_FILE")
             cm_tolerance=$(echo "${cm_tolerance}*10^25" | bc -l)
             cm_tolerance=${cm_tolerance%.*}

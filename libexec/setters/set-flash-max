@@ -30,6 +30,7 @@ max=$(jq -r ".flash_max | values" "$CONFIG_FILE")
 if [[ "$max" != "" ]]; then
     max=$(echo "$max*10^18" | bc -l)
     max=${max%.*}
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLASH" "$(seth --to-bytes32 "$(seth --from-ascii "max")")" "$max")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLASH" "$(seth --to-bytes32 "$(seth --from-ascii "max")")" "$max")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_FLASH" "$(seth --to-bytes32 "$(seth --from-ascii "max")")" "$max"
 fi

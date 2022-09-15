@@ -44,10 +44,12 @@ for token in $tokens; do
         flipDeploy="$(jq ".tokens.${token}.ilks.${ilk} | .flipDeploy!=null" "$CONFIG_FILE")"
 
         if [[ "$flipDeploy" == true ]]; then
+            set +o pipefail +e
             sethSend "$MCD_DEPLOY" "deployCollateralFlip(bytes32,address,address)" \
                 "$ilkName"                                                         \
                 "$joinAddr"                                                        \
                 "$(eval echo "\$PIP_${token}")"
+            set -o pipefail -e
         else
             calcType=$(jq -r ".tokens.${token}.ilks.${ilk}.clipDeploy.calc.type | values" "$CONFIG_FILE")
             calc=$(dappCreate dss-deploy "$calcType")

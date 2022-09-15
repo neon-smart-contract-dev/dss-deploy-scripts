@@ -37,8 +37,9 @@ for token in $tokens; do
             hole=$(echo "$hole"*10^45 | bc)
             hole=${hole%.*}
 
-            calldata="$(seth calldata 'file(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$ilkBytes32" "$(seth --to-bytes32 "$(seth --from-ascii "hole")")" "$hole")"
-            sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#             calldata="$(seth calldata 'file(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$ilkBytes32" "$(seth --to-bytes32 "$(seth --from-ascii "hole")")" "$hole")"
+#             sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+            sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_DOG" "$ilkBytes32" "$(seth --to-bytes32 "$(seth --from-ascii "hole")")" "$hole"
         fi
     done
 done

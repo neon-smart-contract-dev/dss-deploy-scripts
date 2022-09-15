@@ -30,6 +30,7 @@ dump=$(jq -r ".vow_dump" "$CONFIG_FILE")
 if [[ "$dump" != "" ]]; then
     dump=$(echo "$dump"*10^18 | bc)
     dump=$(seth --to-uint256 "${dump%.*}")
-    calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VOW" "$(seth --to-bytes32 "$(seth --from-ascii "dump")")" "$dump")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VOW" "$(seth --to-bytes32 "$(seth --from-ascii "dump")")" "$dump")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'file(address,address,address,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VOW" "$(seth --to-bytes32 "$(seth --from-ascii "dump")")" "$dump"
 fi

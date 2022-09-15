@@ -223,7 +223,7 @@ if [[ "$PROXY_DEPLOYER" == "0x0000000000000000000000000000000000000000" ]]; then
 fi
 
 # Set the proxy address as root of the roles (in order to be able to do all the variables set up)
-sethSend "$MCD_ADM" 'setRootUser(address,bool)' "$PROXY_DEPLOYER" true
+# sethSend "$MCD_ADM" 'setRootUser(address,bool)' "$PROXY_DEPLOYER" true
 
 # Deploy chief as new $MCD_ADM if there isn't an authority in the config file
 MCD_ADM=$(jq -r ".import.authority | values" "$CONFIG_FILE")
@@ -310,16 +310,19 @@ fi
 MCD_IAM_AUTO_LINE=$(dappCreate dss-auto-line-optimized DssAutoLine "$MCD_VAT")
 logAddr "MCD_IAM_AUTO_LINE" "$MCD_IAM_AUTO_LINE"
 # Rely DssAutoLine in the Vat
-calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_IAM_AUTO_LINE")"
-sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+# calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_IAM_AUTO_LINE")"
+# sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+sethSend "$PROXY_PAUSE_ACTIONS" 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_IAM_AUTO_LINE"
 
 # Deploy DssFlash
 MCD_FLASH=$(dappCreate dss-flash DssFlash "$MCD_JOIN_DAI")
 logAddr "MCD_FLASH" "$MCD_FLASH"
+
 # Rely DssFlash in the Vat
 set -e
-calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_FLASH")"
-sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+# calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_FLASH")"
+# sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+sethSend "$PROXY_PAUSE_ACTIONS" 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_FLASH"
 
 # Rely PauseProxy, ESM and FlashKiller in DssFlash and deny deployer
 sethSend "$MCD_FLASH" 'rely(address)' "$MCD_PAUSE_PROXY"
@@ -330,16 +333,19 @@ MCD_VEST_DAI=$(dappCreate dss-vest-optimized DssVestSuckable "$CHANGELOG")
 logAddr "MCD_VEST_DAI" "$MCD_VEST_DAI"
 sethSend "$MCD_VEST_DAI" 'rely(address)' "$MCD_PAUSE_PROXY"
 sethSend "$MCD_VEST_DAI" 'deny(address)' "$ETH_FROM"
-calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_VEST_DAI")"
-sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+# calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_VEST_DAI")"
+# sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+sethSend "$PROXY_PAUSE_ACTIONS" 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_VAT" "$MCD_VEST_DAI"
 MCD_VEST_MKR=$(dappCreate dss-vest-1_0_1-optimized DssVestMintable "$MCD_GOV")
 logAddr "MCD_VEST_MKR" "$MCD_VEST_MKR"
 sethSend "$MCD_VEST_MKR" 'rely(address)' "$MCD_PAUSE_PROXY"
 sethSend "$MCD_VEST_MKR" 'deny(address)' "$ETH_FROM"
 if [[ "$newGovToken" == true ]]; then
-    calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$GOV_GUARD" "$MCD_VEST_MKR")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$GOV_GUARD" "$MCD_VEST_MKR")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'rely(address,address,address,address)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$GOV_GUARD" "$MCD_VEST_MKR"
 fi
+
 MCD_VEST_MKR_TREASURY=$(dappCreate dss-vest-1_0_1-optimized DssVestTransferrable "$MCD_PAUSE_PROXY" "$MCD_GOV")
 sethSend "$MCD_VEST_MKR_TREASURY" 'rely(address)' "$MCD_PAUSE_PROXY"
 sethSend "$MCD_VEST_MKR_TREASURY" 'deny(address)' "$ETH_FROM"

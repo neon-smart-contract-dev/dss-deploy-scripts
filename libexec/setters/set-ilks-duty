@@ -26,8 +26,9 @@ loadAddresses
 log "SET ILKS DUTY:"
 
 setDuty() {
-    calldata="$(seth calldata 'dripAndFile(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_JUG" "$(seth --to-bytes32 "$(seth --from-ascii "$1")")" "$(seth --to-bytes32 "$(seth --from-ascii "duty")")" "$2")"
-    sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+#     calldata="$(seth calldata 'dripAndFile(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_JUG" "$(seth --to-bytes32 "$(seth --from-ascii "$1")")" "$(seth --to-bytes32 "$(seth --from-ascii "duty")")" "$2")"
+#     sethSend "$PROXY_DEPLOYER" 'execute(address,bytes memory)' "$PROXY_PAUSE_ACTIONS" "$calldata"
+    sethSend "$PROXY_PAUSE_ACTIONS" 'dripAndFile(address,address,address,bytes32,bytes32,uint256)' "$MCD_PAUSE" "$MCD_GOV_ACTIONS" "$MCD_JUG" "$(seth --to-bytes32 "$(seth --from-ascii "$1")")" "$(seth --to-bytes32 "$(seth --from-ascii "duty")")" "$2"
 }
 
 tokens=$(jq -r ".tokens | keys_unsorted[]" "$CONFIG_FILE")
